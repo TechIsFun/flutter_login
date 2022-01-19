@@ -15,7 +15,7 @@ import 'users.dart';
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
-  static final GENDER_OPTIONS = ["M", "F", "N/A"];
+  static const genderOptions = ["M", "F", "N/A"];
 
   const LoginScreen({Key? key}) : super(key: key);
 
@@ -141,9 +141,9 @@ class LoginScreen extends StatelessWidget {
           keyName: 'gender',
           displayName: 'Gender',
           fieldType: FormFieldType.options,
-          dropdownOptions: GENDER_OPTIONS.toList(),
+          dropdownOptions: genderOptions.toList(),
           fieldValidator: (value) {
-            if (!GENDER_OPTIONS.contains(value)) {
+            if (!genderOptions.contains(value)) {
               return "Please select one option";
             }
             return null;
