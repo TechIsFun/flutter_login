@@ -1,4 +1,4 @@
-name: Widget tests & code analysis
+name: Update dependencies
 
 on:
   push:
