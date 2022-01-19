@@ -1,0 +1,38 @@
+name: Update dependencies
+
+on:
+  push:
+    branches:
+      - 'update-flutter-packages'
+  schedule:
+    - cron: '40 16 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install JDK
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: 11
+
+    - name: Install Flutter SDK
+      uses: subosito/flutter-action@v1
+
+    - name: Update dependencies
+      run: flutter pub upgrade --major-versions
+
+    #- name: Install dependencies
+    #  run: flutter pub get
+
+    - name: Test
+      run: flutter test
+      
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+
