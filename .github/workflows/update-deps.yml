@@ -28,11 +28,17 @@ jobs:
       uses: tianhaoz95/update-flutter-packages@v0.0.1
       with:
         flutter-project: './lib'
+        git-email: 'actions@github.com'
+        git-name: 'Github Actions'
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Run flutter package updater on examples project
       uses: tianhaoz95/update-flutter-packages@v0.0.1
       with:
         flutter-project: './example'
+        git-email: 'actions@github.com'
+        git-name: 'Github Actions'
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Install dependencies
       run: flutter pub get
