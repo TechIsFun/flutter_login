@@ -1,0 +1,42 @@
+name: Widget tests & code analysis
+
+on:
+  push:
+    branches:
+      - 'update-flutter-packages'
+  schedule:
+    - cron: '40 16 * * *'
+
+jobs:
+  update-deps:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+    - uses: actions/checkout@v2
+
+    - name: Install JDK
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'zulu'
+        java-version: 11
+
+    - name: Install Flutter SDK
+      uses: subosito/flutter-action@v1
+
+    - name: Run flutter package updater on library project
+      uses: tianhaoz95/update-flutter-packages@v0.0.1
+      with:
+        flutter-project: './lib'
+
+    - name: Run flutter package updater on examples project
+      uses: tianhaoz95/update-flutter-packages@v0.0.1
+      with:
+        flutter-project: './example'
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Test
+      run: flutter test
+
