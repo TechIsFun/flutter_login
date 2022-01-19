@@ -4,6 +4,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
+import '../../flutter_login.dart';
+
 enum TextFieldInertiaDirection {
   left,
   right,
@@ -24,28 +26,29 @@ Interval _getInternalInterval(
 }
 
 class AnimatedTextFormField extends StatefulWidget {
-  const AnimatedTextFormField({
-    Key? key,
-    this.interval = const Interval(0.0, 1.0),
-    required this.width,
-    this.loadingController,
-    this.inertiaController,
-    this.inertiaDirection,
-    this.enabled = true,
-    this.labelText,
-    this.prefixIcon,
-    this.suffixIcon,
-    this.keyboardType,
-    this.textInputAction,
-    this.obscureText = false,
-    this.controller,
-    this.focusNode,
-    this.validator,
-    this.onFieldSubmitted,
-    this.onSaved,
-    this.autocorrect = false,
-    this.autofillHints,
-  })  : assert((inertiaController == null && inertiaDirection == null) ||
+  const AnimatedTextFormField(
+      {Key? key,
+      this.interval = const Interval(0.0, 1.0),
+      required this.width,
+      this.loadingController,
+      this.inertiaController,
+      this.inertiaDirection,
+      this.enabled = true,
+      this.labelText,
+      this.prefixIcon,
+      this.suffixIcon,
+      this.keyboardType,
+      this.textInputAction,
+      this.obscureText = false,
+      this.controller,
+      this.focusNode,
+      this.validator,
+      this.onFieldSubmitted,
+      this.onSaved,
+      this.autocorrect = false,
+      this.autofillHints,
+      this.fieldType})
+      : assert((inertiaController == null && inertiaDirection == null) ||
             (inertiaController != null && inertiaDirection != null)),
         super(key: key);
 
@@ -68,6 +71,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final FormFieldSetter<String>? onSaved;
   final TextFieldInertiaDirection? inertiaDirection;
+  final FormFieldType? fieldType;
 
   @override
   _AnimatedTextFormFieldState createState() => _AnimatedTextFormFieldState();
@@ -81,6 +85,19 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   late Animation<double> fieldTranslateAnimation;
   late Animation<double> iconRotationAnimation;
   late Animation<double> iconTranslateAnimation;
+
+  DateTime _selectedDate = _getDefaultDate();
+
+  void _onDateSelected(DateTime? newSelectedDate) {
+    if (newSelectedDate != null) {
+      setState(() {
+        _selectedDate = newSelectedDate;
+        var dateFormatted =
+            "${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}";
+        widget.controller?.text = dateFormatted;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -135,6 +152,17 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         reverseCurve: Curves.easeIn,
       ));
     }
+  }
+
+  Future<void> renderDatePicker() async {
+    final selectedDate = await showDatePicker(
+      context: context,
+      initialEntryMode: DatePickerEntryMode.calendarOnly,
+      initialDate: _selectedDate,
+      firstDate: _getFistDate(),
+      lastDate: _getLastDate(),
+    );
+    _onDateSelected(selectedDate);
   }
 
   void _updateSizeAnimation() {
@@ -248,8 +276,32 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       );
     }
 
-    return textField;
+    if (widget.fieldType == FormFieldType.calendar) {
+      return GestureDetector(
+        onTap: () {
+          renderDatePicker();
+        },
+        child: AbsorbPointer(child: textField),
+      );
+    } else {
+      return textField;
+    }
   }
+}
+
+DateTime _getFistDate() {
+  final DateTime now = DateTime.now();
+  return DateTime(now.year - 100, now.month, now.day, 23, 59, 59, 0, 0);
+}
+
+DateTime _getLastDate() {
+  final DateTime now = DateTime.now();
+  return DateTime(now.year - 16, now.month, now.day, 23, 59, 59, 0, 0);
+}
+
+DateTime _getDefaultDate() {
+  final DateTime ref = _getLastDate();
+  return DateTime(ref.year, ref.month, ref.day - 1, 0, 0, 0, 0, 0);
 }
 
 class AnimatedPasswordTextFormField extends StatefulWidget {

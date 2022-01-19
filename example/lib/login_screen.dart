@@ -1,8 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart' show timeDilation;
 import 'package:flutter_login/flutter_login.dart';
 import 'package:flutter_signin_button/button_list.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 import 'constants.dart';
 import 'custom_route.dart';
@@ -116,6 +119,18 @@ class LoginScreen extends StatelessWidget {
                 value.length < 7 &&
                 !phoneRegExp.hasMatch(value)) {
               return "This isn't a valid phone number";
+            }
+            return null;
+          },
+        ),
+        UserFormField(
+          keyName: 'date_of_birth',
+          displayName: 'Date of birth',
+          icon: const Icon(FontAwesomeIcons.solidCalendarAlt),
+          fieldType: FormFieldType.calendar,
+          fieldValidator: (value) {
+            if (!isValidDateOfBirth(value)) {
+              return "This isn't a valid date of birth";
             }
             return null;
           },
@@ -269,5 +284,20 @@ class LoginScreen extends StatelessWidget {
       },
       showDebugButtons: true,
     );
+  }
+
+  bool isValidDateOfBirth(String? value) {
+    if (value == null) {
+      return false;
+    }
+    try {
+      DateFormat format = DateFormat("dd/MM/yyyy");
+      var date = format.parse(value);
+      var now = DateTime.now();
+      return now.isAfter(date);
+    } catch (e) {
+      log("invalid date", error: e);
+      return false;
+    }
   }
 }

@@ -160,22 +160,23 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
             height: 10,
           ),
           AnimatedTextFormField(
-            controller: _nameControllers[formField.keyName],
-            // interval: _fieldAnimationIntervals[widget.formFields.indexOf(formField)],
-            loadingController: widget.loadingController,
-            width: width,
-            labelText: formField.displayName,
-            prefixIcon:
-                formField.icon ?? const Icon(FontAwesomeIcons.solidUserCircle),
-            keyboardType: TextFieldUtils.getKeyboardType(formField.userType),
-            autofillHints: [
-              TextFieldUtils.getAutofillHints(formField.userType)
-            ],
-            textInputAction: formField.keyName == widget.formFields.last.keyName
-                ? TextInputAction.done
-                : TextInputAction.next,
-            validator: formField.fieldValidator,
-          ),
+              controller: _nameControllers[formField.keyName],
+              // interval: _fieldAnimationIntervals[widget.formFields.indexOf(formField)],
+              loadingController: widget.loadingController,
+              width: width,
+              labelText: formField.displayName,
+              prefixIcon: formField.icon ??
+                  const Icon(FontAwesomeIcons.solidUserCircle),
+              keyboardType: TextFieldUtils.getKeyboardType(formField.userType),
+              autofillHints: [
+                TextFieldUtils.getAutofillHints(formField.userType)
+              ],
+              textInputAction:
+                  formField.keyName == widget.formFields.last.keyName
+                      ? TextInputAction.done
+                      : TextInputAction.next,
+              validator: formField.fieldValidator,
+              fieldType: formField.fieldType),
           const SizedBox(
             height: 5,
           )

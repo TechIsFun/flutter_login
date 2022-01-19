@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/src/models/login_user_type.dart';
 
+import 'form_field_type.dart';
+
 class UserFormField {
   /// The name of the field retrieved as key.
   /// Please ensure this is unique, otherwise an Error will be thrown
@@ -23,12 +25,15 @@ class UserFormField {
   /// Defaults to LoginUserType.user
   final LoginUserType userType;
 
-  const UserFormField({
-    required this.keyName,
-    displayName,
-    this.defaultValue = '',
-    this.icon,
-    this.fieldValidator,
-    this.userType = LoginUserType.name,
-  }) : displayName = displayName ?? keyName;
+  final FormFieldType? fieldType;
+
+  const UserFormField(
+      {required this.keyName,
+      displayName,
+      this.defaultValue = '',
+      this.icon,
+      this.fieldValidator,
+      this.userType = LoginUserType.name,
+      this.fieldType})
+      : displayName = displayName ?? keyName;
 }

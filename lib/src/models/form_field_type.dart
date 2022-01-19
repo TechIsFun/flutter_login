@@ -1,0 +1,1 @@
+enum FormFieldType { text, calendar }
