@@ -15,6 +15,8 @@ import 'users.dart';
 class LoginScreen extends StatelessWidget {
   static const routeName = '/auth';
 
+  static final GENDER_OPTIONS = ["M", "F", "N/A"];
+
   const LoginScreen({Key? key}) : super(key: key);
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
@@ -131,6 +133,18 @@ class LoginScreen extends StatelessWidget {
           fieldValidator: (value) {
             if (!isValidDateOfBirth(value)) {
               return "This isn't a valid date of birth";
+            }
+            return null;
+          },
+        ),
+        UserFormField(
+          keyName: 'gender',
+          displayName: 'Gender',
+          fieldType: FormFieldType.options,
+          dropdownOptions: GENDER_OPTIONS.toList(),
+          fieldValidator: (value) {
+            if (!GENDER_OPTIONS.contains(value)) {
+              return "Please select one option";
             }
             return null;
           },

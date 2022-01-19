@@ -1,1 +1,1 @@
-enum FormFieldType { text, calendar }
+enum FormFieldType { text, calendar, options }

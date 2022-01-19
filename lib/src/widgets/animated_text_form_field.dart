@@ -47,7 +47,8 @@ class AnimatedTextFormField extends StatefulWidget {
       this.onSaved,
       this.autocorrect = false,
       this.autofillHints,
-      this.fieldType})
+      this.fieldType,
+      this.optionItems})
       : assert((inertiaController == null && inertiaDirection == null) ||
             (inertiaController != null && inertiaDirection != null)),
         super(key: key);
@@ -72,6 +73,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final FormFieldSetter<String>? onSaved;
   final TextFieldInertiaDirection? inertiaDirection;
   final FormFieldType? fieldType;
+  final List<String>? optionItems;
 
   @override
   _AnimatedTextFormFieldState createState() => _AnimatedTextFormFieldState();
@@ -283,9 +285,38 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         },
         child: AbsorbPointer(child: textField),
       );
+    } else if (widget.fieldType == FormFieldType.options) {
+      return GestureDetector(
+        onTap: () {
+          renderOptionsDialog(widget.optionItems, widget.labelText);
+        },
+        child: AbsorbPointer(child: textField),
+      );
     } else {
       return textField;
     }
+  }
+
+  void renderOptionsDialog(List<String>? optionItems, String? labelText) async {
+    if (optionItems == null || optionItems.isEmpty == true) {
+      return;
+    }
+
+    final selectedValue = await showDialog<String>(
+        context: context,
+        builder: (BuildContext context) {
+          return SimpleDialog(
+              title: Text(labelText ?? ""),
+              children: optionItems
+                  .map((e) => SimpleDialogOption(
+                      onPressed: () {
+                        Navigator.pop(context, e);
+                      },
+                      child: Text(e)))
+                  .toList());
+        });
+
+    widget.controller?.text = selectedValue ?? "";
   }
 }
 
