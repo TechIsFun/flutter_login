@@ -29,6 +29,8 @@ class UserFormField {
 
   final List<String>? dropdownOptions;
 
+  final String? dateFormat;
+
   const UserFormField(
       {required this.keyName,
       displayName,
@@ -37,6 +39,7 @@ class UserFormField {
       this.fieldValidator,
       this.userType = LoginUserType.name,
       this.fieldType,
-      this.dropdownOptions})
+      this.dropdownOptions,
+      this.dateFormat})
       : displayName = displayName ?? keyName;
 }

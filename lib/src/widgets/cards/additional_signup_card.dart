@@ -177,7 +177,8 @@ class _AdditionalSignUpCardState extends State<_AdditionalSignUpCard>
                       : TextInputAction.next,
               validator: formField.fieldValidator,
               fieldType: formField.fieldType,
-              optionItems: formField.dropdownOptions),
+              optionItems: formField.dropdownOptions,
+              dateFormat: formField.dateFormat),
           const SizedBox(
             height: 5,
           )

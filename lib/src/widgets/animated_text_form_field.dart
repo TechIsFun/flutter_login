@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 
 import '../../flutter_login.dart';
 
@@ -24,6 +25,8 @@ Interval _getInternalInterval(
     curve: curve,
   );
 }
+
+const defaultDateFormat = "dd/MM/yyyy";
 
 class AnimatedTextFormField extends StatefulWidget {
   const AnimatedTextFormField(
@@ -48,7 +51,8 @@ class AnimatedTextFormField extends StatefulWidget {
       this.autocorrect = false,
       this.autofillHints,
       this.fieldType,
-      this.optionItems})
+      this.optionItems,
+      this.dateFormat})
       : assert((inertiaController == null && inertiaDirection == null) ||
             (inertiaController != null && inertiaDirection != null)),
         super(key: key);
@@ -74,6 +78,7 @@ class AnimatedTextFormField extends StatefulWidget {
   final TextFieldInertiaDirection? inertiaDirection;
   final FormFieldType? fieldType;
   final List<String>? optionItems;
+  final String? dateFormat;
 
   @override
   _AnimatedTextFormFieldState createState() => _AnimatedTextFormFieldState();
@@ -90,12 +95,11 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
 
   DateTime _selectedDate = _getDefaultDate();
 
-  void _onDateSelected(DateTime? newSelectedDate) {
+  void _onDateSelected(DateTime? newSelectedDate, String dateFormat) {
     if (newSelectedDate != null) {
       setState(() {
         _selectedDate = newSelectedDate;
-        var dateFormatted =
-            "${_selectedDate.day}/${_selectedDate.month}/${_selectedDate.year}";
+        var dateFormatted = DateFormat(dateFormat).format(_selectedDate);
         widget.controller?.text = dateFormatted;
       });
     }
@@ -156,7 +160,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     }
   }
 
-  Future<void> renderDatePicker() async {
+  Future<void> renderDatePicker(String dateFormat) async {
     final selectedDate = await showDatePicker(
       context: context,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
@@ -164,7 +168,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       firstDate: _getFistDate(),
       lastDate: _getLastDate(),
     );
-    _onDateSelected(selectedDate);
+    _onDateSelected(selectedDate, dateFormat);
   }
 
   void _updateSizeAnimation() {
@@ -281,7 +285,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     if (widget.fieldType == FormFieldType.calendar) {
       return GestureDetector(
         onTap: () {
-          renderDatePicker();
+          renderDatePicker(widget.dateFormat ?? defaultDateFormat);
         },
         child: AbsorbPointer(child: textField),
       );

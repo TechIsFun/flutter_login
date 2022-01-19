@@ -17,6 +17,8 @@ class LoginScreen extends StatelessWidget {
 
   static const genderOptions = ["M", "F", "N/A"];
 
+  static const dateFormat = "dd-MM-yyyy";
+
   const LoginScreen({Key? key}) : super(key: key);
 
   Duration get loginTime => Duration(milliseconds: timeDilation.ceil() * 2250);
@@ -130,6 +132,7 @@ class LoginScreen extends StatelessWidget {
           displayName: 'Date of birth',
           icon: const Icon(FontAwesomeIcons.solidCalendarAlt),
           fieldType: FormFieldType.calendar,
+          dateFormat: dateFormat,
           fieldValidator: (value) {
             if (!isValidDateOfBirth(value)) {
               return "This isn't a valid date of birth";
@@ -305,7 +308,7 @@ class LoginScreen extends StatelessWidget {
       return false;
     }
     try {
-      DateFormat format = DateFormat("dd/MM/yyyy");
+      DateFormat format = DateFormat(dateFormat);
       var date = format.parse(value);
       var now = DateTime.now();
       return now.isAfter(date);
