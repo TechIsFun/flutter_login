@@ -285,6 +285,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     if (widget.fieldType == FormFieldType.calendar) {
       return GestureDetector(
         onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
           renderDatePicker(widget.dateFormat ?? defaultDateFormat);
         },
         child: AbsorbPointer(child: textField),
@@ -292,6 +293,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     } else if (widget.fieldType == FormFieldType.options) {
       return GestureDetector(
         onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
           renderOptionsDialog(widget.optionItems, widget.labelText);
         },
         child: AbsorbPointer(child: textField),
