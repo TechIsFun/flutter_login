@@ -875,7 +875,13 @@ void main() {
           onLogin: (data) => null,
           onRecoverPassword: (data) => null,
           passwordValidator: (value) => value!.length == 5 ? null : 'Invalid!',
-          loginProviders: [LoginProvider(icon: Icons.ac_unit, callback: () {})],
+          loginProviders: [
+            LoginProvider(
+                icon: Icons.ac_unit,
+                callback: () {
+                  return null;
+                })
+          ],
           messages: LoginMessages(
             signupButton: 'REGISTER',
             forgotPasswordButton: 'Forgot huh?',
@@ -910,7 +916,13 @@ void main() {
           onRecoverPassword: (data) => null,
           passwordValidator: (value) => value!.length == 5 ? null : 'Invalid!',
           hideProvidersTitle: true,
-          loginProviders: [LoginProvider(icon: Icons.ac_unit, callback: () {})],
+          loginProviders: [
+            LoginProvider(
+                icon: Icons.ac_unit,
+                callback: () {
+                  return null;
+                })
+          ],
           messages: LoginMessages(
             signupButton: 'REGISTER',
             forgotPasswordButton: 'Forgot huh?',

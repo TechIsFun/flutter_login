@@ -52,6 +52,8 @@ class _TermCheckboxState extends State<TermCheckbox> {
         if (widget.termOfService.mandatory == true &&
             widget.termOfService.getStatus() != true) {
           return widget.termOfService.validationErrorMessage;
+        } else {
+          return null;
         }
       },
     );
