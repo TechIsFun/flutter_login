@@ -1,7 +1,9 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart' as cupertino;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -161,14 +163,30 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
   }
 
   Future<void> renderDatePicker(String dateFormat) async {
-    final selectedDate = await showDatePicker(
-      context: context,
-      initialEntryMode: DatePickerEntryMode.calendarOnly,
-      initialDate: _selectedDate,
-      firstDate: _getFistDate(),
-      lastDate: _getLastDate(),
-    );
-    _onDateSelected(selectedDate, dateFormat);
+    if (Platform.isIOS) {
+      _showCupertinoDialog(
+        cupertino.CupertinoDatePicker(
+          initialDateTime: _selectedDate,
+          minimumDate: _getFistDate(),
+          maximumDate: _getLastDate(),
+          mode: cupertino.CupertinoDatePickerMode.date,
+          use24hFormat: true,
+          // This is called when the user changes the date.
+          onDateTimeChanged: (DateTime newDate) {
+            _onDateSelected(newDate, dateFormat);
+          },
+        ),
+      );
+    } else {
+      final selectedDate = await showDatePicker(
+        context: context,
+        initialEntryMode: DatePickerEntryMode.calendarOnly,
+        initialDate: _selectedDate,
+        firstDate: _getFistDate(),
+        lastDate: _getLastDate(),
+      );
+      _onDateSelected(selectedDate, dateFormat);
+    }
   }
 
   void _updateSizeAnimation() {
@@ -323,6 +341,27 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
         });
 
     widget.controller?.text = selectedValue ?? "";
+  }
+
+  void _showCupertinoDialog(Widget child) {
+    cupertino.showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => Container(
+              height: 216,
+              padding: const EdgeInsets.only(top: 6.0),
+              // The Bottom margin is provided to align the popup above the system navigation bar.
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              // Provide a background color for the popup.
+              color: cupertino.CupertinoColors.systemBackground
+                  .resolveFrom(context),
+              // Use a SafeArea widget to avoid system overlaps.
+              child: SafeArea(
+                top: false,
+                child: child,
+              ),
+            ));
   }
 }
 
