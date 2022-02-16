@@ -326,21 +326,37 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
       return;
     }
 
-    final selectedValue = await showDialog<String>(
-        context: context,
-        builder: (BuildContext context) {
-          return SimpleDialog(
-              title: Text(labelText ?? ""),
-              children: optionItems
-                  .map((e) => SimpleDialogOption(
-                      onPressed: () {
-                        Navigator.pop(context, e);
-                      },
-                      child: Text(e)))
-                  .toList());
-        });
+    if (Platform.isIOS) {
+      final int indexOfCurrentSelection = optionItems
+          .indexWhere((element) => element == widget.controller?.text);
+      final initialItemIndex = max(0, indexOfCurrentSelection);
+      _showCupertinoDialog(cupertino.CupertinoPicker(
+        scrollController:
+            FixedExtentScrollController(initialItem: initialItemIndex),
+        itemExtent: 30,
+        children: optionItems.map((e) => Text(e)).toList(),
+        onSelectedItemChanged: (selectedOptionIndex) {
+          final String selectedOption = optionItems[selectedOptionIndex];
+          widget.controller?.text = selectedOption;
+        },
+      ));
+    } else {
+      final selectedValue = await showDialog<String>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+                title: Text(labelText ?? ""),
+                children: optionItems
+                    .map((e) => SimpleDialogOption(
+                        onPressed: () {
+                          Navigator.pop(context, e);
+                        },
+                        child: Text(e)))
+                    .toList());
+          });
 
-    widget.controller?.text = selectedValue ?? "";
+      widget.controller?.text = selectedValue ?? "";
+    }
   }
 
   void _showCupertinoDialog(Widget child) {
