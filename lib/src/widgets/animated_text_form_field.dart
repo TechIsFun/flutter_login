@@ -347,7 +347,7 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
     cupertino.showCupertinoModalPopup<void>(
         context: context,
         builder: (BuildContext context) => Container(
-              height: 216,
+              height: 216 + 50,
               padding: const EdgeInsets.only(top: 6.0),
               // The Bottom margin is provided to align the popup above the system navigation bar.
               margin: EdgeInsets.only(
@@ -359,7 +359,27 @@ class _AnimatedTextFormFieldState extends State<AnimatedTextFormField> {
               // Use a SafeArea widget to avoid system overlaps.
               child: SafeArea(
                 top: false,
-                child: child,
+                child: SizedBox(
+                  height: 216 + 40,
+                  child: cupertino.Column(children: [
+                    SizedBox(
+                      height: 45,
+                      child: cupertino.Align(
+                        alignment: cupertino.Alignment.topRight,
+                        child: TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const cupertino.Text('OK',
+                              style: cupertino.TextStyle(
+                                  fontSize: 12,
+                                  color: cupertino.CupertinoColors.systemBlue)),
+                        ),
+                      ),
+                    ),
+                    cupertino.Expanded(child: child),
+                  ]),
+                ),
               ),
             ));
   }
